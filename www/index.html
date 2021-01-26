@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    <title>StringShear - A simple harmonic motion on a string physics simulation</title>
+
+    <style>
+        HTML, BODY, #pageTable {
+            height: 100%;
+            font-family: sans-serif;
+            overflow: hidden;
+            margin: 0;
+        }
+    </style>
+
+    <script src="js/constants.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/simstate.1.0.1.js"></script>
+    <script src="js/simsettings.js"></script>
+    <script src="js/appsettings.js"></script>
+    <script src="js/rect.js"></script>
+    <script src="js/drawing.1.0.4.js"></script>
+    <script src="js/main.1.0.4.js"></script>
+</head>
+<body onload="onLoad()">
+    <table id=pageTable>
+        <tr valign=top>
+            <td>
+                <canvas id="myCanvas">
+                    Your browser does not support the canvas element.
+                </canvas>
+            </td>
+			
+            <td id=settingsCell align=left style="font-size: small; background-color: lightgray;">
+                <fieldset>
+                    <legend>Settings</legend>
+                    <table>
+                        <tr>
+                            <td align=right>Time Slice:</td>
+                            <td align=left><input id=timeSlice size=6> ms</td>
+                        </tr>
+
+                        <tr>
+                            <td align=right>Speed:</td>
+                            <td align=left>
+                                <select id=speed>
+                                    <option>Fast</option>
+                                    <option>Slow</option>
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td align=right>Tension:</td>
+                            <td align=left><input id=tension size=6></td>
+                        </tr>
+                    </table>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Oscillations</legend>
+                    <table>
+                        <tr valign=top>
+                            <td nowrap>
+                                <input id=leftEnabled type=checkbox>
+                                <label for=leftEnabled>Left enabled<br>Hz</label>
+                                <br>
+
+                                <textarea id=leftFrequencies rows=6 cols=6></textarea>
+                                <br>
+
+                                <label for=outOfPhase>Out of phase (pi):</label>
+                                <br>
+                                <input id=outOfPhase size=6>
+                            </td>
+                            <td nowrap>
+                                <input id=rightEnabled type=checkbox>
+                                <label for=rightEnabled>Right enabled<br>Hz</label>
+                                <br>
+
+                                <textarea id=rightFrequencies rows=6 cols=6></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+
+                <br>
+
+                <center>
+                    <input type=submit id=runButton value="Run" style="width: 8em" onclick="main.onRun()">
+                    <input type=button id=reset value="Reset" style="width: 8em" onclick="main.onReset()">
+                    <br>
+                    <input type=button id=resetMaxes value="Reset Maximums" style="width: 16em" onclick="main.onResetMaxes()">
+                    <br>
+                    <input type=button id=clearSettings value="Clear Settings" style="width: 8em" onclick="onClearSettings()">
+                    <br>
+                    <div id=statusText></div>
+                    <br>
+                    <a style="color: blue" target=_blank href="https://www.stringshear.com">https://www.stringshear.com</a>
+                </center>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
