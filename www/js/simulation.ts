@@ -36,8 +36,6 @@
                 (
                     this.settings.leftFrequencies[f],
                     cOscillatorAmplitude,
-                    this.settings.justPulse,
-                    this.settings.justHalfPulse,
                     this.settings.outOfPhase,
                     this.time
                 );
@@ -50,8 +48,6 @@
                 (
                     this.settings.rightFrequencies[f],
                     cOscillatorAmplitude,
-                    this.settings.justPulse,
-                    this.settings.justHalfPulse,
                     0.0, // outOfPhase
                     this.time
                 );
@@ -120,25 +116,31 @@
 
         stateObj.curStringy = this.currentString.clone();
 
-        if (stateObj.maxPosStringy == null || Math.abs(stateObj.maxPosStringy.maxPos) < Math.abs(this.maxPosString.maxPos))
+        if (stateObj.maxPosStringy == null || Math.abs(stateObj.maxPosStringy.maxPos) < Math.abs(this.maxPosString.maxPos)) {
             stateObj.maxPosStringy = this.maxPosString.clone();
+            stateObj.maxPosTime = this.time;
+        }
 
-        if (stateObj.maxVelStringy == null || Math.abs(stateObj.maxVelStringy.maxVel) < Math.abs(this.maxVelString.maxVel))
+        if (stateObj.maxVelStringy == null || Math.abs(stateObj.maxVelStringy.maxVel) < Math.abs(this.maxVelString.maxVel)) {
             stateObj.maxVelStringy = this.maxVelString.clone();
+            stateObj.maxVelTime = this.time;
+        }
 
-        if (stateObj.maxAclStringy == null || Math.abs(stateObj.maxAclStringy.maxAcl) < Math.abs(this.maxAclString.maxAcl))
+        if (stateObj.maxAclStringy == null || Math.abs(stateObj.maxAclStringy.maxAcl) < Math.abs(this.maxAclString.maxAcl)) {
             stateObj.maxAclStringy = this.maxAclString.clone();
+            stateObj.maxAclTime = this.time;
+        }
 
-        if (stateObj.maxPunchStringy == null || Math.abs(stateObj.maxPunchStringy.maxPunch) < Math.abs(this.maxPunchString.maxPunch))
+        if (stateObj.maxPunchStringy == null || Math.abs(stateObj.maxPunchStringy.maxPunch) < Math.abs(this.maxPunchString.maxPunch)) {
             stateObj.maxPunchStringy = this.maxPunchString.clone();
+            stateObj.maxPunchTime = this.time;
+        }
     };
 
     getOscillatorPostion
         (
             frequency: number,
             amplitude: number,
-            justPulse: boolean,
-            justHalfPulse: boolean,
             outOfPhase: number,
             time: number
         ): number {
@@ -146,11 +148,6 @@
         radians -= outOfPhase * Math.PI;
 
         if (radians < 0.0)
-            radians = 0.0;
-
-        if (justPulse && radians > 2.0 * Math.PI)
-            radians = 0.0;
-        else if (justHalfPulse && radians > 1.0 * Math.PI)
             radians = 0.0;
 
         var retVal = Math.sin(radians) * amplitude;
@@ -163,7 +160,7 @@ function selfTestSimulation() {
 
     let s: Simulation = new Simulation();
 
-    let pos: number = s.getOscillatorPostion(10.0, 1.0, false, false, 0.0, 0.0);
+    let pos: number = s.getOscillatorPostion(10.0, 1.0, 0.0, 0.0);
     console.assert(!isNaN(pos), "getOscillatorPostion returns NaN");
 
     let stateObj: SimState = new SimState();

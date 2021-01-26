@@ -66,7 +66,7 @@
     }
 }
 
-const cAppSettingsLocalStorageItemName = "appsettings.1.0.2";
+const cAppSettingsLocalStorageItemName = "appsettings";
 
 function getAppSettings(): AppSettings {
     let settingsStr = localStorage.getItem(cAppSettingsLocalStorageItemName);

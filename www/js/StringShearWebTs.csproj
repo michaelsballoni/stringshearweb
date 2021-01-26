@@ -59,17 +59,17 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="drawing.ts" />
+    <TypeScriptCompile Include="main.ts" />
     <TypeScriptCompile Include="rect.ts" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="appsettings.ts" />
     <TypeScriptCompile Include="constants.ts" />
-    <TypeScriptCompile Include="drawing.1.0.4.ts" />
-    <TypeScriptCompile Include="main.1.0.4.ts" />
     <TypeScriptCompile Include="particle.ts" />
     <TypeScriptCompile Include="simsettings.ts" />
-    <TypeScriptCompile Include="simstate.1.0.1.ts" />
-    <TypeScriptCompile Include="simulation.1.0.1.ts" />
+    <TypeScriptCompile Include="simstate.ts" />
+    <TypeScriptCompile Include="simulation.ts" />
     <TypeScriptCompile Include="stringy.ts" />
     <TypeScriptCompile Include="utils.ts" />
   </ItemGroup>

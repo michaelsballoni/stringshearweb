@@ -1,5 +1,5 @@
 ﻿class Main {
-    appSettings: AppSettings = new AppSettings();
+    appSettings: AppSettings = getAppSettings();
     simSettings: SimSettings = this.appSettings.toSimSettings();
 
     drawing: Drawing = null;
@@ -19,24 +19,27 @@
         getInputElement("rightFrequencies").value = this.appSettings.rightFrequencies;
 
         getInputElement("outOfPhase").value = this.appSettings.outOfPhase;
-
-        getInputElement("justPulse").checked = this.appSettings.justPulse;
-        getInputElement("justHalfPulse").checked = this.appSettings.justHalfPulse;
     }
 
-    updateUiToSettings(): boolean {
-        if (isNaN(parseFloat(getInputElement("timeSlice").value))) {
-            alert("Invalid time slice: " + getInputElement("timeSlice").value);
+    updateUiToSettingsWithAlerts(): boolean {
+        let msg: string = this.updateUiToSettings();
+        if (msg) {
+            alert(msg);
             return false;
         }
+        else
+            return true;
+    }
+
+    updateUiToSettings(): string {
+        if (isNaN(parseFloat(getInputElement("timeSlice").value)))
+            return "Invalid time slice: " + getInputElement("timeSlice").value;
         this.appSettings.timeSlice = getInputElement("timeSlice").value;
 
         this.appSettings.simulationSpeed = getInputElement("speed").value;
 
-        if (isNaN(parseFloat(getInputElement("tension").value))) {
-            alert("Invalid tension: " + getInputElement("tension").value);
-            return false;
-        }
+        if (isNaN(parseFloat(getInputElement("tension").value)))
+            return "Invalid tension: " + getInputElement("tension").value;
         this.appSettings.tension = getInputElement("tension").value;
 
         this.appSettings.leftEnabled = getInputElement("leftEnabled").checked;
@@ -45,18 +48,14 @@
         this.appSettings.rightEnabled = getInputElement("rightEnabled").checked;
         this.appSettings.rightFrequencies = getInputElement("rightFrequencies").value;
 
-        if (isNaN(parseFloat(getInputElement("outOfPhase").value))) {
-            alert("Invalid out of phase: " + getInputElement("outOfPhase").value);
-            return false;
-        }
+        if (isNaN(parseFloat(getInputElement("outOfPhase").value)))
+            return "Invalid out of phase: " + getInputElement("outOfPhase").value;
         this.appSettings.outOfPhase = getInputElement("outOfPhase").value;
-
-        this.appSettings.justPulse = getInputElement("justPulse").checked;
-        this.appSettings.justHalfPulse = getInputElement("justHalfPulse").checked;
 
         saveAppSettings(this.appSettings);
         this.simSettings = this.appSettings.toSimSettings();
-        return true;
+        this.sendSettingsToWorker();
+        return null; // no error, success
     }
 
     sendSettingsToWorker(): void {
@@ -73,7 +72,7 @@
     onRun(): void {
         let runButton = getInputElement("runButton");
 
-        if (!this.updateUiToSettings())
+        if (!this.updateUiToSettingsWithAlerts())
             return;
 
         if (this.worker == null)
@@ -103,7 +102,11 @@
     }
 
     onClearSettings(): void {
-        this.appSettings = clearAppSettings();
+        clearAppSettings();
+
+        this.appSettings = new AppSettings();
+        this.simSettings = this.appSettings.toSimSettings();
+
         this.updateSettingsToUi();
     }
 
@@ -135,7 +138,7 @@
 
         main.updateSettingsToUi();
 
-        main.worker = new Worker("runner.js");
+        main.worker = new Worker("js/runner.js");
         main.worker.onmessage = this.onWorkerMessage;
 
         main.sendSettingsToWorker();
@@ -153,17 +156,28 @@
         }
     }
 
-    onClose(): void {
-        main.updateUiToSettings();
+    onBeforeClose(event: any): void {
+        console.log("onBeforeClose called");
+
+        let errorMsg: string = this.updateUiToSettings();
+        if (!errorMsg) {
+            console.log("onBeforeClose success");
+            return;
+        }
+
+        console.log("onBeforeClose failure");
+        event.preventDefault();
+        event.returnValue = errorMsg;
     }
 }
 let main: Main = null;
 
 function onLoad(): void {
     main = new Main();
-
-    window.onresize = main.onResize;
-    window.onclose = main.onClose;
-
     main.onLoad();
+
+    window.addEventListener("resize", function (event) { main.onResize(); });
+    window.addEventListener("beforeunload", function (event) { main.onBeforeClose(event); });
+
+    getInputElement("speed").onchange = function (event) { main.updateUiToSettings(); };
 }

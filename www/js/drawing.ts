@@ -12,16 +12,6 @@
         this.canvas.height = height;
     }
 
-    computeStringMaxY(stringy: Stringy): number {
-        let maxVal: number = 0.0;
-        for (let i = 1; i < stringy.particles.length - 1; ++i) {
-            let cur: number = stringy.particles[i].y;
-            if (Math.abs(cur) > Math.abs(maxVal))
-                maxVal = cur;
-        }
-        return maxVal;
-    }
-
     draw(simState: SimState, simSettings: SimSettings) {
         this.ctxt.fillStyle = "white";
         this.ctxt.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -37,10 +27,11 @@
                 "black",
                 new Rect(padding, padding, width - padding, height - padding),
                 simState.curStringy,
-                this.computeStringMaxY(simState.curStringy) / cOscillatorAmplitude,
+                simState.maxPosStringy.maxPos / cOscillatorAmplitude,
                 simState.time,
                 padding,
                 simSettings,
+                simState,
                 0
             );
 
@@ -51,9 +42,10 @@
                 new Rect(padding, padding * 2 + height * 1, width - padding, height - padding),
                 simState.maxPosStringy,
                 simState.maxPosStringy.maxPos / cOscillatorAmplitude,
-                simState.time,
+                simState.maxPosTime,
                 padding,
                 simSettings,
+                simState,
                 1
             );
 
@@ -63,10 +55,11 @@
                 "blue",
                 new Rect(padding, padding * 3 + height * 2, width - padding, height - padding),
                 simState.maxVelStringy,
-                simState.maxVelStringy.maxPos / cOscillatorAmplitude,
-                simState.time,
+                simState.maxVelStringy.maxVel,
+                simState.maxVelTime,
                 padding,
                 simSettings,
+                simState,
                 2
             );
 
@@ -76,10 +69,11 @@
                 "green",
                 new Rect(padding, padding * 4 + height * 3, width - padding, height - padding),
                 simState.maxAclStringy,
-                simState.maxAclStringy.maxPos / cOscillatorAmplitude,
-                simState.time,
+                simState.maxAclStringy.maxAcl,
+                simState.maxAclTime,
                 padding,
                 simSettings,
+                simState,
                 3
             );
 
@@ -89,10 +83,11 @@
                 "purple",
                 new Rect(padding, padding * 5 + height * 4, width - padding, height - padding),
                 simState.maxPunchStringy,
-                simState.maxPunchStringy.maxPos / cOscillatorAmplitude,
-                simState.time,
+                simState.maxPunchStringy.maxPunch,
+                simState.maxPunchTime,
                 padding,
                 simSettings,
+                simState,
                 4
             );
     }
@@ -107,8 +102,9 @@
         time: number,
         padding: number,
         simSettings: SimSettings,
-        whichMaxToDraw: number
-    ) : void {
+        simState: SimState,
+        whichMaxToDraw: number,
+    ): void {
         this.ctxt.fillStyle = "black";
         this.ctxt.strokeStyle = "black";
 
@@ -145,7 +141,7 @@
         let maxPosVal =
             Math.max
                 (
-                    Math.abs(stringy.maxPos),
+                    Math.abs(simState.maxPosStringy.maxPos),
                     cOscillatorAmplitude
                     *
                     (
@@ -181,6 +177,7 @@
         //
         // Draw the maximum particle, like, big
         //
+        //console.log("whichMaxToDraw = " + whichMaxToDraw); // FORNOW
         switch (whichMaxToDraw) {
             case 0:
                 this.drawParticleBig(particles[0], rect, maxPosVal);
