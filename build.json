@@ -1,0 +1,32 @@
+{
+    "android": {
+        "debug": {
+            "keystore": "android.keystore",
+            "storePassword": "ballonus",
+            "alias": "android-app-key-app1",
+            "password" : "ballonus",
+            "keystoreType": ""
+        },
+        "release": {
+            "keystore": "android.keystore",
+            "storePassword": "ballonus",
+            "alias": "android-app-key-app1",
+            "password" : "ballonus",
+            "keystoreType": ""
+        }
+    },
+
+    "ios": {
+        "debug": {
+            "codeSignIdentity": "iPhone Developer",
+            "developmentTeam": "C22KP6WLFT",
+            "packageType": "development",
+            "automaticProvisioning": true
+        },
+        "release": {
+            "codeSignIdentity": "iPhone Developer",
+            "developmentTeam": "C22KP6WLFT",
+            "packageType": "app-store",
+            "automaticProvisioning": true
+        }
+    }}

@@ -2,8 +2,9 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval'; worker-src * localhost: blob: data: file:; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data:">
 
-    <title>StringShear - A simple harmonic motion on a string physics simulation</title>
+    <title>String Shear - A simple harmonic motion on a string physics simulation</title>
 
     <style>
         HTML, BODY, #pageTable {
@@ -11,6 +12,7 @@
             font-family: sans-serif;
             overflow: hidden;
             margin: 0;
+            -webkit-text-size-adjust: 100%;
         }
     </style>
 
